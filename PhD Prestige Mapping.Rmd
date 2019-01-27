@@ -1,0 +1,170 @@
+---
+title: "PhD Prestige Map"
+author: "Jeff Hoover"
+date: "11/19/2018"
+output: bookdown::pdf_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+#warnings = -1
+```
+
+```{r}
+library(stringr)
+library(maps)
+library(mapdata)
+library(ggmap)
+library(knitr)
+library(ggplot2)
+library(tinytex)
+library(readxl)
+
+Sys.setenv(TZ = "UTC")
+
+#shhh(library(tidyverse))
+
+#get US data
+#usa <- map_data("usa")
+
+#graph US
+#ggplot() + 
+#  geom_polygon(data = usa, aes(x = long, y = lat, group = group)) + 
+#  coord_quickmap()
+
+#get states data
+states <- map_data("state")
+
+data <- read_excel("~/Desktop/Manuscripts/Phd Prestige/LatLongPhd.xlsx")
+
+#Specify cities to be marked
+labs <- data.frame(long = data$long, 
+                   lat = data$lat, 
+                   names = c("UCLA", "UC Berkeley", "UNC Chapel Hill", 
+                             "Stony Brook - SUNY", "Minnesota - Twin Cities",
+                             "Yale", "Wisconsin - Madison", "UT - Austin", 
+                             "Virginia", "Washington", "Duke", "Emory",
+                             "Illinois - UC", "Penn", "Pittsburgh"), 
+                   stringsAsFactors = FALSE)
+
+#graph grayscale US map with 3 cities identified
+ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+               fill = "gray", color = "black") + 
+  coord_quickmap() +  
+  guides(fill = FALSE)  + 
+  #geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 3) +
+  geom_jitter(data = labs, aes(x = long, y = lat), color = "black", size = 2, 
+              width = 0.3, height = 0.3)  + 
+  #ggtitle("Top 15 Clinical Psychology Programs") + 
+  labs(x = "Longitude", y = "Latitude")  +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+\pagebreak
+
+```{r}
+top15 <- ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+               fill = "gray", color = "black") + 
+  coord_quickmap() +  
+  guides(fill = FALSE)  + 
+  #geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 3) +
+  geom_jitter(data = labs, aes(x = long, y = lat), color = "red", size = 2, 
+              width = 0.3, height = 0.3)  + 
+  #ggtitle("Top 15 Clinical Psychology Programs") + 
+  labs(x = "Longitude", y = "Latitude")  +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave("top15.tiff", plot = top15, dpi = "retina")
+```
+
+\pagebreak
+
+```{r}
+data2 <- read_excel("~/Desktop/Manuscripts/Phd Prestige/PrestigeLatLong.xlsx")
+
+labs2 <- data.frame(long = data2$Flong, 
+                   lat = data2$Flat, 
+                   #names = c("UCLA", "UC Berkeley", "UNC Chapel Hill", 
+                    #         "Stony Brook - SUNY", "Minnesota - Twin Cities",
+                     #        "Yale", "Wisconsin - Madison", "UT - Austin", 
+                      #       "Virginia", "Washington", "Duke", "Emory",
+                       #      "Illinois - UC", "Penn", "Pittsburgh"), 
+                   stringsAsFactors = FALSE)
+
+ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+               fill = "gray", color = "black") + 
+  coord_quickmap() +  
+  guides(fill = FALSE)  + 
+  #geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 3) +
+  geom_jitter(data = labs2, aes(x = long, y = lat), color = "black", size = 2,
+              width = .3, height = .3, alpha = 5/9) + 
+  #ggtitle("Geographic Representation of Students \n in Top 15 Clinical Psychology Programs") #+ 
+  labs(x = "Longitude", y = "Latitude")  +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+\pagebreak
+
+```{r}
+students <- ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+               fill = "gray", color = "black") + 
+  coord_quickmap() +  
+  guides(fill = FALSE)  + 
+  #geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 3) +
+  geom_jitter(data = labs2, aes(x = long, y = lat), color = "red", size = 2,
+              width = .3, height = .3, alpha = 5/9) + 
+  #ggtitle("Geographic Representation of Students \n in Top 15 Clinical Psychology Programs") #+ 
+  labs(x = "Longitude", y = "Latitude")  +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave("students.tiff", plot = students, dpi = "retina")
+```
+
+\pagebreak
+
+```{r}
+data3 <- read.csv("~/Desktop/Manuscripts/Phd Prestige/MERGED2016_17_PP.csv")
+
+labs3 <- data.frame(long = data3$LONGITUDE, 
+                   lat = data3$LATITUDE, 
+                   #names = c("UCLA", "UC Berkeley", "UNC Chapel Hill", 
+                    #         "Stony Brook - SUNY", "Minnesota - Twin Cities",
+                     #        "Yale", "Wisconsin - Madison", "UT - Austin", 
+                      #       "Virginia", "Washington", "Duke", "Emory",
+                       #      "Illinois - UC", "Penn", "Pittsburgh"), 
+                   stringsAsFactors = FALSE)
+
+heis <- ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+               fill = "gray", color = "black") + 
+  coord_quickmap() +  
+  guides(fill = FALSE)  + 
+  #geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 3) +
+  geom_jitter(data = labs3, aes(x = long, y = lat), color = "black", size = 2,
+              width = .3, height = .3, alpha = 3/9) + 
+  #ggtitle("Higher Education Institutions in the United States") + 
+  labs(x = "Longitude", y = "Latitude")  +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+\pagebreak
+
+```{r}
+heis <- ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+               fill = "gray", color = "black") + 
+  coord_quickmap() +  
+  guides(fill = FALSE)  + 
+  #geom_point(data = labs, aes(x = long, y = lat), color = "black", size = 3) +
+  geom_jitter(data = labs3, aes(x = long, y = lat), color = "red", size = 2,
+              width = .3, height = .3, alpha = 3/9) + 
+  #ggtitle("Higher Education Institutions in the United States") + 
+  labs(x = "Longitude", y = "Latitude")  +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave("heis.tiff", plot = heis, dpi = "retina")
+```

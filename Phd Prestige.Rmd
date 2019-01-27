@@ -1,0 +1,124 @@
+---
+title: "Phd Prestige"
+author: "Jeff Hoover"
+date: "11/13/2018"
+output: 
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.pos = 'H')
+
+#load packages
+library(metafor)
+library(readxl)
+library(tinytex)
+library(MASS)
+
+#set working directory
+setwd("~/Desktop/Manuscripts/Phd Prestige")
+
+prestige <- read_excel("prestige data final.xlsx")
+
+prestigeTop5 <- read_excel("prestige top 5.xlsx")
+```
+
+```{r}
+oreg <-polr(as.factor(SchoolRank)~LiberalArts+PublicSchool+ClinPsych+Masters+RA,
+             data = prestige, Hess = TRUE)
+
+summary(oreg)
+
+#reg <- lm(SchoolRank ~ LiberalArts + PublicSchool + ClinPsych + Masters + RA, data = prestige)
+#print(reg)
+#summary(reg)
+```
+
+\pagebreak
+
+```{r}
+
+
+#reg2 <- lm(SchoolRank ~ LiberalArts + PublicSchool + ClinPsych + Masters + RA, 
+          #data = prestigeTop5)
+#print(reg2)
+#summary(reg2)
+```
+
+\pagebreak
+
+#By Region and School Attendance Population
+
+```{r}
+table4 <- matrix(c(131, 3477000, 54, 4424000, 56, 6927000, 51, 5146000), ncol=4)
+
+table4 <- as.table(table4)
+
+chisq4 <- chisq.test(table4)
+
+chisq4
+
+round(chisq4$stdres, 2)
+
+#chisq.residuals(table2, digits = 2, std = TRUE, raw = FALSE)
+```
+
+\pagebreak
+
+#By Division and School Attendance Population
+
+```{r}
+table <- matrix(c(60, 1032000, 71, 2445000, 35, 2844000, 19, 1579000, 35, 
+                 3666000, 5, 1057000, 16, 2204000, 5, 1752000, 46, 3394000), 
+               ncol = 9)
+
+table <- as.table(table)
+
+chisq <- chisq.test(table)
+
+chisq
+
+round(chisq$stdres, 2)
+
+#chisq.residuals(table, digits = 2, std = TRUE, raw = FALSE)
+```
+
+\pagebreak
+
+#Chi-square according to number of HEIs
+
+##By Region
+
+```{r}
+table2 <- matrix(c(131, 506, 54, 510, 56, 672, 51, 343), ncol=4)
+
+table2 <- as.table(table2)
+
+chisq2 <- chisq.test(table2)
+
+chisq2
+
+round(chisq2$stdres, 2)
+
+#chisq.residuals(table2, digits = 2, std = TRUE, raw = FALSE)
+```
+
+\pagebreak
+
+##By division
+
+```{r}
+table3 <- matrix(c(60, 163, 71, 343, 35, 302, 19, 208, 35, 360, 5, 132, 16, 180,
+                   5, 115, 46, 228), ncol = 9)
+
+table3 <- as.table(table3)
+
+chisq3 <- chisq.test(table3)
+
+chisq3
+
+round(chisq3$stdres, 2)
+
+#chisq.residuals(table3, digits = 2, std = TRUE, raw = FALSE)
+```
